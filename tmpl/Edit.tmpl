@@ -1,0 +1,15 @@
+{{ define "Edit" }}
+  {{ template "Header" }}
+    {{ template "Menu" }} 
+   <h2>Edit Data</h2>
+  
+    <form method="POST" action="update">
+      <input type="hidden" name="uid" value="{{ .Id }}" />
+      <label> Name </label><input type="text" name="name" value="{{ .Name }}" autocomplete="off"  /><br />
+      <label> Phone </label><input type="text" name="phone" value="{{ .Phone }}" autocomplete="off"  /><br />
+      <label> Cpf </label><input type="text" name="cpf" value="{{ .Cpf }}" autocomplete="off" /><br />
+      <input type="submit" value="Save user" />
+    </form><br />
+    <a href="/delete?id={{ .Id }}">Delete</a>
+  {{ template "Footer" }}
+{{ end }}

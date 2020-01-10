@@ -1,0 +1,13 @@
+{{ define "New" }}
+  {{ template "Header" }}
+    {{ template "Menu" }} 
+   <h2>New Register</h2>
+  
+    <form method="POST" action="insert">
+      <label> Name </label><input type="text" name="name" autocomplete="off" /><br />
+      <label> Phone </label><input type="text" name="phone" autocomplete="off" /><br />
+      <label> Cpf </label><input type="text" name="cpf" autocomplete="off" /><br />
+      <input type="submit" value="Save user" />
+    </form>
+  {{ template "Footer" }}
+{{ end }}

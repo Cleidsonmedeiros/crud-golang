@@ -4,8 +4,8 @@
 
 
     <h2> ADDRESS | IdUser: {{ .Id }} </h2>
-      <p>Name: {{ .Name }}</p>
-      <p>Phone:  {{ .Phone }}</p>
-      <p>Cpf: {{ .Cpf }}</p><br /> <a href="/edit?id={{ .Id }}">Edit</a></p>
+      <p>Street: {{ .Street }}</p>
+      <p>Cep:  {{ .Cep }}</p>
+      <p>Number: {{ .Number }}</p><br /> <a href="/edit?id={{ .Id }}">Edit User</a></p>
   {{ template "Footer" }}
 {{ end }}

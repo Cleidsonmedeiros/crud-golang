@@ -18,9 +18,10 @@ type People struct {
 
 type Address struct {
 	Id int
-	Streat string
+	Street string
 	Cep string
 	Number int
+	PeopleId int
 }
 
 func dbConn() (db *sql.DB) {
@@ -81,28 +82,29 @@ func Show(w http.ResponseWriter, r *http.Request) {
 
 	nId := r.URL.Query().Get("id")
 
-	selDB, err := db.Query("SELECT * FROM people WHERE id=?", nId)
+	selDB, err := db.Query("SELECT * FROM address WHERE people_id=?", nId)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	n := People{}
+	n := Address{}
 
 	for selDB.Next() {
 		var id int
-		var name string
-		var phone int
-		var cpf int
+		var street string
+		var cep string
+		var number int
+		var people_id int
 
-		err = selDB.Scan(&id, &name, &phone, &cpf)
+		err = selDB.Scan(&id, &street, &cep, &number, &people_id)
 		if err != nil {
 			panic(err.Error())
 		}
 
 		n.Id = id
-		n.Name = name
-		n.Phone = phone
-		n.Cpf = cpf
+		n.Street = street
+		n.Cep = cep
+		n.Number = number
 	}
 
 	tmpl.ExecuteTemplate(w, "Show", n)
@@ -113,6 +115,32 @@ func Show(w http.ResponseWriter, r *http.Request) {
 
 func New(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "New", nil)
+}
+
+func InsertAddress(w http.ResponseWriter, r *http.Request) {
+
+	db := dbConn()
+
+	if r.Method == "POST" {
+
+		street := r.FormValue("street")
+		cep := r.FormValue("cep")
+		number := r.FormValue("number")
+		people_id := r.FormValue("people_id")
+
+		insForm, err := db.Prepare("INSERT INTO address(street, cep, number, people_id) VALUES(?,?,?,?)")
+		if err != nil {
+			panic(err.Error())
+		}
+
+		insForm.Exec(street, cep, number, people_id)
+
+		log.Println("INSERT: Street: " + street + " | Cep: " + cep + " | Number: " + number + " | PeopleId" + people_id)
+	}
+
+	defer db.Close()
+
+	http.Redirect(w, r, "/", 301)
 }
 
 func Edit(w http.ResponseWriter, r *http.Request) {
@@ -234,7 +262,10 @@ func main() {
 	http.HandleFunc("/insert", Insert)
 	http.HandleFunc("/update", Update)
 	http.HandleFunc("/delete", Delete)
+	http.HandleFunc("/insert-address", InsertAddress)
 
 	http.ListenAndServe(":9000", nil)
 
 }
+
+//S
